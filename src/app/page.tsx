@@ -15,9 +15,23 @@ export default function Home() {
         </p>
       </div>
 
+      {/*
+        `render` swaps the underlying element (Base UI's equivalent of Radix's
+        `asChild`). Because the result is an <a>, not a <button>, we must also
+        set nativeButton={false} — otherwise Base UI warns that native button
+        semantics have been removed, which breaks keyboard and screen reader
+        behaviour.
+      */}
       <div className="flex gap-3">
-        <Button render={<Link href="/signup">Get started</Link>} />
-        <Button variant="outline" render={<Link href="/login">Sign in</Link>} />
+        <Button
+          nativeButton={false}
+          render={<Link href="/signup">Get started</Link>}
+        />
+        <Button
+          variant="outline"
+          nativeButton={false}
+          render={<Link href="/login">Sign in</Link>}
+        />
       </div>
     </main>
   );
