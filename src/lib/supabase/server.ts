@@ -1,6 +1,8 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
+import type { Database } from "@/lib/database.types";
+
 /**
  * Supabase client for Server Components, Server Actions and Route Handlers.
  *
@@ -10,7 +12,11 @@ import { cookies } from "next/headers";
 export async function createClient() {
   const cookieStore = await cookies();
 
-  return createServerClient(
+  // The <Database> generic is what makes queries type-safe: column names,
+  // return shapes and relationships are all checked against the real schema.
+  // Regenerate it after every migration with:
+  //   npx supabase gen types typescript --linked > src/lib/database.types.ts
+  return createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
     {

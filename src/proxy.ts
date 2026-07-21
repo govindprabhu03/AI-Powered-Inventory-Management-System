@@ -44,14 +44,52 @@ export async function proxy(request: NextRequest) {
   //
   // getClaims() verifies the JWT signature. getSession() does not — it trusts
   // the cookie, which a client can forge. Never authorize on getSession().
-  await supabase.auth.getClaims();
+  const { data } = await supabase.auth.getClaims();
+  const isAuthenticated = Boolean(data?.claims?.sub);
 
-  // Route protection is added in Phase 1, once login pages exist.
+  const { pathname } = request.nextUrl;
+  const isPublicRoute = PUBLIC_ROUTES.some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`),
+  );
+  const isAuthPage = AUTH_PAGES.includes(pathname);
+
+  // Signed out, asking for a protected page -> send to login, remembering where
+  // they were headed so we can return them after signing in.
+  if (!isAuthenticated && !isPublicRoute) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/login";
+    url.searchParams.set("next", pathname);
+    return NextResponse.redirect(url);
+  }
+
+  // Signed in, asking for login/signup -> nothing to do there.
+  if (isAuthenticated && isAuthPage) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/dashboard";
+    url.search = "";
+    return NextResponse.redirect(url);
+  }
+
+  // This check is a convenience, not the security boundary. It only inspects a
+  // cookie and can be bypassed by calling a Server Action directly. Row Level
+  // Security in Postgres is what actually protects the data.
 
   // Must return this exact object. Constructing a fresh NextResponse here would
   // silently discard the refreshed auth cookies set above.
   return supabaseResponse;
 }
+
+/** Reachable without signing in. Everything else requires a session. */
+const PUBLIC_ROUTES = [
+  "/",
+  "/login",
+  "/signup",
+  "/forgot-password",
+  "/auth",
+];
+
+/** Pointless to visit while already signed in. */
+const AUTH_PAGES = ["/login", "/signup", "/forgot-password"];
 
 export const config = {
   matcher: [
