@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { logout } from "@/app/(auth)/actions";
@@ -51,7 +52,15 @@ export default async function DashboardPage() {
       </div>
 
       <section className="space-y-3">
-        <h2 className="text-sm font-medium">Your organizations</h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-medium">Your organizations</h2>
+          <Button
+            variant="outline"
+            size="sm"
+            nativeButton={false}
+            render={<Link href="/organizations/new">New organization</Link>}
+          />
+        </div>
 
         {memberships && memberships.length > 0 ? (
           <ul className="grid gap-2">
@@ -70,10 +79,20 @@ export default async function DashboardPage() {
             ))}
           </ul>
         ) : (
-          <div className="rounded-lg border border-dashed px-4 py-8 text-center">
+          <div className="grid gap-3 rounded-lg border border-dashed px-4 py-8 text-center">
             <p className="text-sm text-muted-foreground">
               You don&apos;t belong to an organization yet.
             </p>
+            <div>
+              <Button
+                nativeButton={false}
+                render={
+                  <Link href="/organizations/new">
+                    Create your first organization
+                  </Link>
+                }
+              />
+            </div>
           </div>
         )}
       </section>
