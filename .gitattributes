@@ -1,0 +1,14 @@
+# Normalize line endings: LF in the repository, native in the working copy.
+# Keeps Windows checkouts working while Vercel/Linux builds see consistent files.
+* text=auto eol=lf
+
+# Binary files Git must never touch
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.pdf binary
+*.woff binary
+*.woff2 binary
