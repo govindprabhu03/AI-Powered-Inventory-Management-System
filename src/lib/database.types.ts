@@ -412,6 +412,17 @@ export type Database = {
         }
       }
       can_see_profile: { Args: { p_profile_id: string }; Returns: boolean }
+      category_tree: {
+        Args: { p_org_id: string }
+        Returns: {
+          depth: number
+          id: string
+          name: string
+          parent_id: string
+          path: string
+          product_count: number
+        }[]
+      }
       create_organization: {
         Args: { p_name: string; p_slug: string }
         Returns: {
