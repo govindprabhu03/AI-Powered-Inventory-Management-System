@@ -344,6 +344,122 @@ export type Database = {
         }
         Relationships: []
       }
+      stock_levels: {
+        Row: {
+          available: number | null
+          id: string
+          on_hand: number
+          org_id: string
+          product_id: string
+          reserved: number
+          updated_at: string
+          warehouse_id: string
+        }
+        Insert: {
+          available?: number | null
+          id?: string
+          on_hand?: number
+          org_id: string
+          product_id: string
+          reserved?: number
+          updated_at?: string
+          warehouse_id: string
+        }
+        Update: {
+          available?: number | null
+          id?: string
+          on_hand?: number
+          org_id?: string
+          product_id?: string
+          reserved?: number
+          updated_at?: string
+          warehouse_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stock_levels_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stock_levels_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stock_levels_warehouse_id_fkey"
+            columns: ["warehouse_id"]
+            isOneToOne: false
+            referencedRelation: "warehouses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      stock_movements: {
+        Row: {
+          created_at: string
+          created_by: string
+          id: string
+          movement_type: Database["public"]["Enums"]["movement_type"]
+          note: string | null
+          org_id: string
+          product_id: string
+          quantity: number
+          reference: string | null
+          warehouse_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string
+          id?: string
+          movement_type: Database["public"]["Enums"]["movement_type"]
+          note?: string | null
+          org_id: string
+          product_id: string
+          quantity: number
+          reference?: string | null
+          warehouse_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          id?: string
+          movement_type?: Database["public"]["Enums"]["movement_type"]
+          note?: string | null
+          org_id?: string
+          product_id?: string
+          quantity?: number
+          reference?: string | null
+          warehouse_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stock_movements_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stock_movements_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stock_movements_warehouse_id_fkey"
+            columns: ["warehouse_id"]
+            isOneToOne: false
+            referencedRelation: "warehouses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       suppliers: {
         Row: {
           address: string | null
@@ -489,6 +605,16 @@ export type Database = {
         }
         Returns: boolean
       }
+      record_stock_transfer: {
+        Args: {
+          p_from_warehouse: string
+          p_note?: string
+          p_product_id: string
+          p_quantity: number
+          p_to_warehouse: string
+        }
+        Returns: undefined
+      }
       user_org_ids: { Args: never; Returns: string[] }
       user_role_in: {
         Args: { p_org_id: string }
@@ -496,6 +622,15 @@ export type Database = {
       }
     }
     Enums: {
+      movement_type:
+        | "stock_in"
+        | "stock_out"
+        | "transfer_in"
+        | "transfer_out"
+        | "return"
+        | "damage"
+        | "loss"
+        | "adjustment"
       org_role:
         | "super_admin"
         | "inventory_manager"
@@ -632,6 +767,16 @@ export const Constants = {
   },
   public: {
     Enums: {
+      movement_type: [
+        "stock_in",
+        "stock_out",
+        "transfer_in",
+        "transfer_out",
+        "return",
+        "damage",
+        "loss",
+        "adjustment",
+      ],
       org_role: [
         "super_admin",
         "inventory_manager",

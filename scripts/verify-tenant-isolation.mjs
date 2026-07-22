@@ -247,6 +247,51 @@ async function main() {
       writeErr ? `(${writeErr.code})` : "INSERTED!",
     );
   }
+
+  // 10. Inventory ledger: B posts a movement in its own org; A must not see the
+  //     movement or the derived level, nor be able to post into B's org.
+  {
+    const { data: bProduct } = await b.client
+      .from("products")
+      .insert({ org_id: orgB.id, name: "B-stock-item", sku: `bstk-${stamp}` })
+      .select("id")
+      .single();
+    const { data: bWh } = await b.client
+      .from("warehouses")
+      .insert({ org_id: orgB.id, name: "B-warehouse" })
+      .select("id")
+      .single();
+
+    const { error: bMoveErr } = await b.client.from("stock_movements").insert({
+      org_id: orgB.id,
+      product_id: bProduct.id,
+      warehouse_id: bWh.id,
+      movement_type: "stock_in",
+      quantity: 42,
+    });
+    record("B can post its own stock movement", !bMoveErr, bMoveErr?.message ?? "");
+
+    const { data: aSeesMoves } = await a.client
+      .from("stock_movements")
+      .select("id")
+      .eq("product_id", bProduct.id);
+    record("A cannot read B's stock movements", (aSeesMoves ?? []).length === 0);
+
+    const { data: aSeesLevels } = await a.client
+      .from("stock_levels")
+      .select("id")
+      .eq("product_id", bProduct.id);
+    record("A cannot read B's stock levels", (aSeesLevels ?? []).length === 0);
+
+    const { error: aPostErr } = await a.client.from("stock_movements").insert({
+      org_id: orgB.id,
+      product_id: bProduct.id,
+      warehouse_id: bWh.id,
+      movement_type: "stock_in",
+      quantity: 5,
+    });
+    record("A cannot post movements into Beta", Boolean(aPostErr), aPostErr ? `(${aPostErr.code})` : "POSTED!");
+  }
 }
 
 try {
