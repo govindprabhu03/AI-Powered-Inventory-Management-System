@@ -6,6 +6,8 @@ import {
   LayoutDashboard,
   Package,
   Tags,
+  Warehouse,
+  Truck,
   type LucideIcon,
 } from "lucide-react";
 
@@ -18,6 +20,8 @@ const NAV: NavItem[] = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/products", label: "Products", icon: Package },
   { href: "/categories", label: "Categories", icon: Tags },
+  { href: "/warehouses", label: "Warehouses", icon: Warehouse },
+  { href: "/suppliers", label: "Suppliers", icon: Truck },
 ];
 
 export function SidebarNav() {
