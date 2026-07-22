@@ -13,6 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { requireContext, canEditCatalog } from "@/lib/auth/context";
+import { getPrimaryImageUrls } from "@/lib/data/product-images";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata = { title: "Products · Smart Inventory" };
@@ -81,6 +82,9 @@ export default async function ProductsPage({
 
   const total = count ?? 0;
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+
+  // Primary-image thumbnails for the products on this page, batch-signed.
+  const thumbs = await getPrimaryImageUrls((products ?? []).map((p) => p.id));
 
   // Preserve the current filters when building sort/pagination links.
   const qs = (overrides: Record<string, string>) => {
@@ -152,6 +156,7 @@ export default async function ProductsPage({
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead className="w-12" />
                   <TableHead>
                     <Link href={qs({ sort: "name", dir: ascending && sort === "name" ? "desc" : "asc" })}>
                       Name
@@ -175,6 +180,18 @@ export default async function ProductsPage({
               <TableBody>
                 {products.map((p) => (
                   <TableRow key={p.id}>
+                    <TableCell>
+                      <div className="size-9 overflow-hidden rounded border bg-muted">
+                        {thumbs.get(p.id) && (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={thumbs.get(p.id)}
+                            alt=""
+                            className="size-full object-cover"
+                          />
+                        )}
+                      </div>
+                    </TableCell>
                     <TableCell className="font-medium">
                       <span className="flex items-center gap-2">
                         {p.name}

@@ -2,8 +2,10 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
 import { ProductForm } from "@/components/products/product-form";
+import { ProductImages } from "@/components/products/product-images";
 import { requireContext, canEditCatalog } from "@/lib/auth/context";
 import { getCatalogOptions } from "@/lib/data/catalog-options";
+import { getProductImages } from "@/lib/data/product-images";
 import { createClient } from "@/lib/supabase/server";
 import type { ProductFormValues } from "@/lib/validation/product";
 
@@ -32,6 +34,7 @@ export default async function EditProductPage({
   if (!product) notFound();
 
   const { categories, suppliers } = await getCatalogOptions();
+  const images = await getProductImages(id);
 
   // Map the database row onto the form's field names. Numbers become strings
   // for the inputs; nulls become empty strings.
@@ -71,6 +74,15 @@ export default async function EditProductPage({
         categories={categories}
         suppliers={suppliers}
       />
+
+      <section className="grid gap-3 border-t pt-6">
+        <h2 className="text-sm font-medium">Images</h2>
+        <ProductImages
+          productId={id}
+          orgId={ctx.activeOrg.orgId}
+          images={images}
+        />
+      </section>
     </div>
   );
 }
