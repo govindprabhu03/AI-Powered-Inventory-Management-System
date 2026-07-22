@@ -205,6 +205,48 @@ async function main() {
       .eq("id", orgA.id);
     record("B reads Alpha by id -> 0 rows", (data ?? []).length === 0);
   }
+
+  // 9. Catalog tables: B seeds one row in each, A must not see or write it.
+  //    This runs automatically for every table added to CATALOG_TABLES, so the
+  //    same harness re-proves isolation as the schema grows.
+  const CATALOG_TABLES = {
+    categories: { name: "B-secret-category" },
+    suppliers: { company_name: "B-secret-supplier" },
+    warehouses: { name: "B-secret-warehouse" },
+    products: { name: "B-secret-product", sku: `bsku-${stamp}` },
+  };
+
+  for (const [table, extra] of Object.entries(CATALOG_TABLES)) {
+    // B creates a row in its own org.
+    const { data: made, error: makeErr } = await b.client
+      .from(table)
+      .insert({ org_id: orgB.id, ...extra })
+      .select("id")
+      .single();
+
+    if (makeErr || !made) {
+      record(`B can create its own ${table}`, false, makeErr?.message ?? "no row");
+      continue;
+    }
+    record(`B can create its own ${table}`, true);
+
+    // A tries to read it -> denied.
+    const { data: seen } = await a.client
+      .from(table)
+      .select("id")
+      .eq("id", made.id);
+    record(`A cannot read B's ${table}`, (seen ?? []).length === 0);
+
+    // A tries to write into B's org -> denied by the write policy.
+    const { error: writeErr } = await a.client
+      .from(table)
+      .insert({ org_id: orgB.id, ...extra });
+    record(
+      `A cannot create ${table} in Beta`,
+      Boolean(writeErr),
+      writeErr ? `(${writeErr.code})` : "INSERTED!",
+    );
+  }
 }
 
 try {
