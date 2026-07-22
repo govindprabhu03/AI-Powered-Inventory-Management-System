@@ -110,12 +110,30 @@ export default async function ProductsPage({
             {total} {total === 1 ? "product" : "products"}
           </p>
         </div>
-        {canEdit && (
+        <div className="flex flex-wrap items-center gap-2">
           <Button
+            variant="outline"
+            size="sm"
             nativeButton={false}
-            render={<Link href="/products/new">Add product</Link>}
+            render={<Link href="/products/labels">Print labels</Link>}
           />
-        )}
+          {/* Plain <a> download, not a Link — the Route Handler streams a file. */}
+          <Button variant="outline" size="sm" nativeButton={false} render={<a href="/products/export">Export CSV</a>} />
+          {canEdit && (
+            <Button
+              variant="outline"
+              size="sm"
+              nativeButton={false}
+              render={<Link href="/products/import">Import CSV</Link>}
+            />
+          )}
+          {canEdit && (
+            <Button
+              nativeButton={false}
+              render={<Link href="/products/new">Add product</Link>}
+            />
+          )}
+        </div>
       </div>
 
       {/* Plain GET form: search works without JavaScript, and the query lives
