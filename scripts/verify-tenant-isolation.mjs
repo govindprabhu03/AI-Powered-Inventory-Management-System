@@ -255,11 +255,20 @@ try {
   console.error(`\nSetup failed: ${err.message}`);
   process.exitCode = 1;
 } finally {
-  // Teardown: delete the test users. Cascades remove their orgs and memberships.
+  // Teardown. organizations.created_by is ON DELETE RESTRICT, so a user cannot
+  // be deleted while they still own an org. Delete their orgs first (cascading
+  // members/products/etc.), then the users. The service key bypasses RLS.
   for (const id of created) {
-    await admin.auth.admin.deleteUser(id).catch(() => {});
+    await admin.from("organizations").delete().eq("created_by", id);
   }
-  if (created.length) console.log(`\nCleaned up ${created.length} test user(s).`);
+  let removed = 0;
+  for (const id of created) {
+    const { error } = await admin.auth.admin.deleteUser(id);
+    if (!error) removed++;
+  }
+  if (created.length) {
+    console.log(`\nCleaned up ${removed}/${created.length} test user(s).`);
+  }
 }
 
 if (results.length) {

@@ -2,7 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Package, type LucideIcon } from "lucide-react";
+import {
+  LayoutDashboard,
+  Package,
+  Tags,
+  type LucideIcon,
+} from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -12,6 +17,7 @@ type NavItem = { href: string; label: string; icon: LucideIcon };
 const NAV: NavItem[] = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/products", label: "Products", icon: Package },
+  { href: "/categories", label: "Categories", icon: Tags },
 ];
 
 export function SidebarNav() {
