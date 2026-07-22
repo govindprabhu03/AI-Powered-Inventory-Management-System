@@ -39,6 +39,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      categories: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          org_id: string
+          parent_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          org_id: string
+          parent_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          org_id?: string
+          parent_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "categories_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "categories_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       invitations: {
         Row: {
           accepted_at: string | null
@@ -142,6 +184,94 @@ export type Database = {
         }
         Relationships: []
       }
+      products: {
+        Row: {
+          barcode: string | null
+          brand: string | null
+          category_id: string | null
+          cost_price: number
+          created_at: string
+          description: string | null
+          dimensions: Json | null
+          id: string
+          is_archived: boolean
+          name: string
+          org_id: string
+          reorder_level: number
+          selling_price: number
+          sku: string
+          supplier_id: string | null
+          tax_rate: number
+          unit: string
+          updated_at: string
+          weight: number | null
+        }
+        Insert: {
+          barcode?: string | null
+          brand?: string | null
+          category_id?: string | null
+          cost_price?: number
+          created_at?: string
+          description?: string | null
+          dimensions?: Json | null
+          id?: string
+          is_archived?: boolean
+          name: string
+          org_id: string
+          reorder_level?: number
+          selling_price?: number
+          sku: string
+          supplier_id?: string | null
+          tax_rate?: number
+          unit?: string
+          updated_at?: string
+          weight?: number | null
+        }
+        Update: {
+          barcode?: string | null
+          brand?: string | null
+          category_id?: string | null
+          cost_price?: number
+          created_at?: string
+          description?: string | null
+          dimensions?: Json | null
+          id?: string
+          is_archived?: boolean
+          name?: string
+          org_id?: string
+          reorder_level?: number
+          selling_price?: number
+          sku?: string
+          supplier_id?: string | null
+          tax_rate?: number
+          unit?: string
+          updated_at?: string
+          weight?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "products_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "products_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "products_supplier_id_fkey"
+            columns: ["supplier_id"]
+            isOneToOne: false
+            referencedRelation: "suppliers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -171,6 +301,94 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      suppliers: {
+        Row: {
+          address: string | null
+          company_name: string
+          contact_person: string | null
+          created_at: string
+          email: string | null
+          gst_number: string | null
+          id: string
+          org_id: string
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          company_name: string
+          contact_person?: string | null
+          created_at?: string
+          email?: string | null
+          gst_number?: string | null
+          id?: string
+          org_id: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          company_name?: string
+          contact_person?: string | null
+          created_at?: string
+          email?: string | null
+          gst_number?: string | null
+          id?: string
+          org_id?: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "suppliers_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      warehouses: {
+        Row: {
+          address: string | null
+          capacity: number | null
+          created_at: string
+          id: string
+          manager_id: string | null
+          name: string
+          org_id: string
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          capacity?: number | null
+          created_at?: string
+          id?: string
+          manager_id?: string | null
+          name: string
+          org_id: string
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          capacity?: number | null
+          created_at?: string
+          id?: string
+          manager_id?: string | null
+          name?: string
+          org_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "warehouses_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
