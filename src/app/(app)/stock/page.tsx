@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { RealtimeStockRefresher } from "@/components/stock/realtime-refresher";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -64,6 +65,11 @@ export default async function StockPage() {
             <Button
               variant="outline"
               nativeButton={false}
+              render={<Link href="/stock/scan">Scan</Link>}
+            />
+            <Button
+              variant="outline"
+              nativeButton={false}
               render={<Link href="/stock/transfer">Transfer</Link>}
             />
             <Button
@@ -73,6 +79,9 @@ export default async function StockPage() {
           </div>
         )}
       </div>
+
+      {/* Live updates: any stock_levels change in this org re-renders the page. */}
+      <RealtimeStockRefresher orgId={ctx.activeOrg.orgId} />
 
       {rows.length > 0 ? (
         <div className="overflow-x-auto rounded-lg border">

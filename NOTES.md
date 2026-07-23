@@ -476,6 +476,27 @@ const { count } = await supabase
 if (error) { /* handle */ }
 ```
 
+### Supabase Realtime
+
+Tables added to the `supabase_realtime` publication stream their row changes to
+subscribed browsers over a websocket. Two rules we rely on:
+
+- **Realtime enforces RLS per subscriber** — proven by test: a user from
+  another org who subscribes to the same feed receives zero events.
+- **Use events as a doorbell, not a payload.** On any event, call
+  `router.refresh()` and let the Server Component refetch. Never patch client
+  state from the event — then there is nothing to get out of sync.
+
+```ts
+supabase
+  .channel(`stock-levels-${orgId}`)
+  .on("postgres_changes",
+    { event: "*", schema: "public", table: "stock_levels",
+      filter: `org_id=eq.${orgId}` },
+    () => router.refresh())
+  .subscribe()
+```
+
 ---
 
 ## 9. SQL for this project
@@ -799,9 +820,9 @@ git remote set-url origin https://USERNAME@github.com/USERNAME/repo.git
 | Phase | Building | Concepts to learn |
 |---|---|---|
 | **0** ✅ | Setup, deploy pipeline | App Router, Server/Client Components, env vars, migrations |
-| **1** | Auth + organizations | **RLS**, policies, `security definer`, OAuth, JWT, triggers |
-| **2** | Products, categories, warehouses, suppliers | CRUD pattern, Zod, React Hook Form, TanStack Query, recursive CTEs, file storage |
-| **3** | Inventory ledger | Append-only design, triggers, transactions, realtime, concurrency |
+| **1** ✅ | Auth + organizations | **RLS**, policies, `security definer`, OAuth, JWT, triggers |
+| **2** ✅ | Products, categories, warehouses, suppliers | CRUD pattern, Zod, React Hook Form, recursive CTEs, file storage |
+| **3** ✅ | Inventory ledger | Append-only design, triggers, transactions, realtime, concurrency |
 | **4** | Purchases + sales | State machines, order lifecycles, PDF generation |
 | **5** | Dashboard, reports, search, notifications | Views, indexes, full-text search, charts, realtime |
 | **6** | AI assistant + forecasting | Tool calling, moving averages, seasonality, RAG |

@@ -59,6 +59,42 @@ export async function recordMovement(
 }
 
 /**
+ * Look up a product by scanned code — barcode first, then SKU, since our
+ * printed labels encode the barcode when present and fall back to the SKU.
+ */
+export async function lookupProductByCode(code: string): Promise<
+  | { ok: true; product: { id: string; name: string; sku: string } }
+  | { ok: false; error: string }
+> {
+  const trimmed = code.trim();
+  if (!trimmed || trimmed.length > 100) {
+    return { ok: false, error: "Invalid code" };
+  }
+
+  const ctx = await requireContext();
+  const supabase = await createClient();
+
+  const { data } = await supabase
+    .from("products")
+    .select("id, name, sku")
+    .eq("org_id", ctx.activeOrg.orgId)
+    .eq("is_archived", false)
+    .or(`barcode.eq.${sanitizeForFilter(trimmed)},sku.eq.${sanitizeForFilter(trimmed)}`)
+    .limit(1);
+
+  const product = data?.[0];
+  if (!product) {
+    return { ok: false, error: `No product matches “${trimmed}”` };
+  }
+  return { ok: true, product };
+}
+
+/** PostgREST .or() treats commas/parens as syntax; strip them from user input. */
+function sanitizeForFilter(v: string) {
+  return v.replace(/[,()"]/g, "");
+}
+
+/**
  * Move stock between warehouses.
  *
  * One RPC call — record_stock_transfer() posts the out and in legs inside a
