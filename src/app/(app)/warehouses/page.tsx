@@ -26,6 +26,7 @@ export default async function WarehousesPage() {
     supabase
       .from("warehouses")
       .select("id, name, address, capacity, manager_id")
+      .eq("org_id", ctx.activeOrg.orgId) // scope to the ACTIVE org, not all orgs
       .order("name"),
     getOrgMembers(ctx.activeOrg.orgId),
   ]);

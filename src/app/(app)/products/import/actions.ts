@@ -50,8 +50,8 @@ export async function importProducts(csvText: string): Promise<ImportResult> {
   // Resolve category/supplier names to ids once. Unknown names are left null,
   // which is a warning-level condition, not a hard error.
   const [{ data: cats }, { data: sups }] = await Promise.all([
-    supabase.from("categories").select("id, name"),
-    supabase.from("suppliers").select("id, company_name"),
+    supabase.from("categories").select("id, name").eq("org_id", ctx.activeOrg.orgId),
+    supabase.from("suppliers").select("id, company_name").eq("org_id", ctx.activeOrg.orgId),
   ]);
   const catByName = new Map((cats ?? []).map((c) => [c.name.toLowerCase(), c.id]));
   const supByName = new Map(

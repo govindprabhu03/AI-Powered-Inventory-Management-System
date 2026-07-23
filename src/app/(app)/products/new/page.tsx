@@ -11,7 +11,7 @@ export default async function NewProductPage() {
   const ctx = await requireContext();
   if (!canEditCatalog(ctx.activeOrg.role)) redirect("/products");
 
-  const { categories, suppliers } = await getCatalogOptions();
+  const { categories, suppliers } = await getCatalogOptions(ctx.activeOrg.orgId);
 
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-8 py-10">

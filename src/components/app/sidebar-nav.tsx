@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  Boxes,
   LayoutDashboard,
   Package,
   Tags,
@@ -18,6 +19,7 @@ type NavItem = { href: string; label: string; icon: LucideIcon };
 // Extended as each section of Phase 2 is built.
 const NAV: NavItem[] = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/stock", label: "Stock", icon: Boxes },
   { href: "/products", label: "Products", icon: Package },
   { href: "/categories", label: "Categories", icon: Tags },
   { href: "/warehouses", label: "Warehouses", icon: Warehouse },

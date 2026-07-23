@@ -7,12 +7,13 @@ import { createClient } from "@/lib/supabase/server";
 export const metadata = { title: "Product labels · Smart Inventory" };
 
 export default async function LabelsPage() {
-  await requireContext();
+  const ctx = await requireContext();
   const supabase = await createClient();
 
   const { data: products } = await supabase
     .from("products")
     .select("id, name, sku, barcode")
+    .eq("org_id", ctx.activeOrg.orgId)
     .eq("is_archived", false)
     .order("name");
 
