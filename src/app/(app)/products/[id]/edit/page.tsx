@@ -33,7 +33,7 @@ export default async function EditProductPage({
 
   if (!product) notFound();
 
-  const { categories, suppliers } = await getCatalogOptions();
+  const { categories, suppliers } = await getCatalogOptions(ctx.activeOrg.orgId);
   const images = await getProductImages(id);
 
   // Map the database row onto the form's field names. Numbers become strings

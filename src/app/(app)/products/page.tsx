@@ -60,14 +60,16 @@ export default async function ProductsPage({
 
   const supabase = await createClient();
 
-  // Note: no org filter here — RLS restricts rows to the active org's tenant.
-  // The join pulls category and supplier names in one round trip.
+  // RLS is the security boundary (never another tenant's rows), but a user can
+  // belong to SEVERAL orgs — the explicit filter scopes the list to the one
+  // they're currently acting in.
   let query = supabase
     .from("products")
     .select(
       "id, name, sku, selling_price, is_archived, categories(name), suppliers(company_name)",
       { count: "exact" },
-    );
+    )
+    .eq("org_id", ctx.activeOrg.orgId);
 
   if (!showArchived) query = query.eq("is_archived", false);
 

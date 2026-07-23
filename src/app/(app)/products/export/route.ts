@@ -28,7 +28,7 @@ export const CSV_COLUMNS = [
  * render it. requireContext() guards it (signed in + org); RLS scopes the rows.
  */
 export async function GET() {
-  await requireContext();
+  const ctx = await requireContext();
   const supabase = await createClient();
 
   const { data: products } = await supabase
@@ -36,6 +36,7 @@ export async function GET() {
     .select(
       "name, sku, barcode, brand, cost_price, selling_price, tax_rate, unit, weight, reorder_level, description, categories(name), suppliers(company_name)",
     )
+    .eq("org_id", ctx.activeOrg.orgId)
     .order("name");
 
   const rows = (products ?? []).map((p) => ({

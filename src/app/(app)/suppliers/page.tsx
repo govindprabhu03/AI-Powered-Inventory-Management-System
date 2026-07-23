@@ -24,6 +24,7 @@ export default async function SuppliersPage() {
   const { data: suppliers } = await supabase
     .from("suppliers")
     .select("id, company_name, contact_person, email, phone")
+    .eq("org_id", ctx.activeOrg.orgId) // scope to the ACTIVE org, not all orgs
     .order("company_name");
 
   return (

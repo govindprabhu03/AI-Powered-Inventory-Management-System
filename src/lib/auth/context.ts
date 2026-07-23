@@ -33,6 +33,17 @@ export function canEditCatalog(role: OrgRole): boolean {
   return CATALOG_EDITORS.includes(role);
 }
 
+/** Roles allowed to post stock movements. Mirrors the stock_movements RLS. */
+export const STOCK_RECORDERS: OrgRole[] = [
+  "super_admin",
+  "inventory_manager",
+  "warehouse_staff",
+];
+
+export function canRecordStock(role: OrgRole): boolean {
+  return STOCK_RECORDERS.includes(role);
+}
+
 /**
  * The single source of truth for "who is signed in, and which organization are
  * they acting in". Every page under the app shell calls this.
