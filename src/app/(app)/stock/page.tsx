@@ -60,10 +60,17 @@ export default async function StockPage() {
           </p>
         </div>
         {canRecord && (
-          <Button
-            nativeButton={false}
-            render={<Link href="/stock/record">Record movement</Link>}
-          />
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              nativeButton={false}
+              render={<Link href="/stock/transfer">Transfer</Link>}
+            />
+            <Button
+              nativeButton={false}
+              render={<Link href="/stock/record">Record movement</Link>}
+            />
+          </div>
         )}
       </div>
 
