@@ -21,13 +21,31 @@ export default async function StockPage() {
   const canRecord = canRecordStock(ctx.activeOrg.role);
 
   const supabase = await createClient();
-  const { data: levels } = await supabase
-    .from("stock_levels")
-    .select(
-      "id, on_hand, reserved, available, products(id, name, sku, unit, reorder_level), warehouses(name)",
-    )
-    .eq("org_id", ctx.activeOrg.orgId)
-    .order("updated_at", { ascending: false });
+  const [{ data: levels }, { data: incomingRows }] = await Promise.all([
+    supabase
+      .from("stock_levels")
+      .select(
+        "id, warehouse_id, on_hand, reserved, available, products(id, name, sku, unit, reorder_level), warehouses(name)",
+      )
+      .eq("org_id", ctx.activeOrg.orgId)
+      .order("updated_at", { ascending: false }),
+    // Incoming = quantities on approved-but-not-yet-received purchase orders,
+    // keyed to the destination warehouse.
+    supabase
+      .from("purchase_order_items")
+      .select("product_id, quantity, purchase_orders!inner(warehouse_id, status)")
+      .eq("org_id", ctx.activeOrg.orgId)
+      .eq("purchase_orders.status", "approved"),
+  ]);
+
+  // Build an incoming map keyed product:warehouse.
+  const incoming = new Map<string, number>();
+  for (const r of incomingRows ?? []) {
+    const wh = r.purchase_orders?.warehouse_id;
+    if (!wh) continue;
+    const key = `${r.product_id}:${wh}`;
+    incoming.set(key, (incoming.get(key) ?? 0) + r.quantity);
+  }
 
   const rows = (levels ?? []).filter((l) => l.products && l.warehouses);
   rows.sort((a, b) =>
@@ -93,6 +111,7 @@ export default async function StockPage() {
                 <TableHead className="text-right">On hand</TableHead>
                 <TableHead className="text-right">Reserved</TableHead>
                 <TableHead className="text-right">Available</TableHead>
+                <TableHead className="text-right">Incoming</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -125,6 +144,9 @@ export default async function StockPage() {
                   </TableCell>
                   <TableCell className="text-right font-medium tabular-nums">
                     {l.available}
+                  </TableCell>
+                  <TableCell className="text-right tabular-nums text-muted-foreground">
+                    {incoming.get(`${l.products!.id}:${l.warehouse_id}`) ?? 0}
                   </TableCell>
                 </TableRow>
               ))}
