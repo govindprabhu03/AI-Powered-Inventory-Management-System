@@ -1257,6 +1257,16 @@ export type Database = {
         }
       }
       fulfil_sales_order: { Args: { p_id: string }; Returns: undefined }
+      global_search: {
+        Args: { p_org_id: string; p_query: string }
+        Returns: {
+          id: string
+          kind: string
+          subtitle: string
+          title: string
+          url: string
+        }[]
+      }
       has_org_role: {
         Args: {
           p_org_id: string
@@ -1293,6 +1303,8 @@ export type Database = {
         }
         Returns: undefined
       }
+      show_limit: { Args: never; Returns: number }
+      show_trgm: { Args: { "": string }; Returns: string[] }
       submit_purchase_order: { Args: { p_id: string }; Returns: undefined }
       user_org_ids: { Args: never; Returns: string[] }
       user_role_in: {

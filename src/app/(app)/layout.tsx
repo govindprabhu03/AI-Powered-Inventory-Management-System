@@ -1,4 +1,5 @@
 import { logout } from "@/app/(auth)/actions";
+import { GlobalSearch } from "@/components/app/global-search";
 import { NotificationBell } from "@/components/app/notification-bell";
 import { OrgSwitcher } from "@/components/app/org-switcher";
 import { SidebarNav } from "@/components/app/sidebar-nav";
@@ -50,7 +51,8 @@ export default async function AppLayout({
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex h-12 items-center justify-end gap-2 border-b px-6">
+        <header className="flex h-12 items-center justify-between gap-2 border-b px-6">
+          <GlobalSearch orgId={ctx.activeOrg.orgId} />
           <NotificationBell userId={ctx.userId} items={items} unread={unread} />
         </header>
         <main className="min-w-0 flex-1">{children}</main>
