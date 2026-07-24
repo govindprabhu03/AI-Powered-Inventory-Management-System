@@ -20,23 +20,32 @@ export function RealtimeStockRefresher({ orgId }: { orgId: string }) {
 
   useEffect(() => {
     const supabase = createClient();
+    let channel: ReturnType<typeof supabase.channel> | null = null;
 
-    const channel = supabase
-      .channel(`stock-levels-${orgId}`)
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "stock_levels",
-          filter: `org_id=eq.${orgId}`,
-        },
-        () => router.refresh(),
-      )
-      .subscribe();
+    (async () => {
+      // Hand Realtime the user's JWT before subscribing. Without it the socket
+      // is anon, RLS on postgres_changes sees auth.uid() = null, and events for
+      // this org are silently dropped.
+      const { data } = await supabase.auth.getSession();
+      if (data.session) await supabase.realtime.setAuth(data.session.access_token);
+
+      channel = supabase
+        .channel(`stock-levels-${orgId}`)
+        .on(
+          "postgres_changes",
+          {
+            event: "*",
+            schema: "public",
+            table: "stock_levels",
+            filter: `org_id=eq.${orgId}`,
+          },
+          () => router.refresh(),
+        )
+        .subscribe();
+    })();
 
     return () => {
-      supabase.removeChannel(channel);
+      if (channel) supabase.removeChannel(channel);
     };
   }, [orgId, router]);
 

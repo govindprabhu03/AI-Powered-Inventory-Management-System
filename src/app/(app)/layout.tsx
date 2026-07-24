@@ -1,8 +1,10 @@
 import { logout } from "@/app/(auth)/actions";
+import { NotificationBell } from "@/components/app/notification-bell";
 import { OrgSwitcher } from "@/components/app/org-switcher";
 import { SidebarNav } from "@/components/app/sidebar-nav";
 import { Button } from "@/components/ui/button";
 import { requireContext } from "@/lib/auth/context";
+import { getNotifications } from "@/lib/data/notifications";
 
 /**
  * The shell shared by every signed-in page: sidebar with org switcher, nav, and
@@ -18,6 +20,7 @@ export default async function AppLayout({
   children: React.ReactNode;
 }) {
   const ctx = await requireContext();
+  const { items, unread } = await getNotifications();
 
   return (
     <div className="flex min-h-svh">
@@ -46,7 +49,12 @@ export default async function AppLayout({
         </div>
       </aside>
 
-      <main className="min-w-0 flex-1">{children}</main>
+      <div className="flex min-w-0 flex-1 flex-col">
+        <header className="flex h-12 items-center justify-end gap-2 border-b px-6">
+          <NotificationBell userId={ctx.userId} items={items} unread={unread} />
+        </header>
+        <main className="min-w-0 flex-1">{children}</main>
+      </div>
     </div>
   );
 }
