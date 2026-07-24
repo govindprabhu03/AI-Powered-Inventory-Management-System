@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import {
   Boxes,
   LayoutDashboard,
+  BarChart3,
   Package,
   Receipt,
   ShoppingCart,
@@ -30,6 +31,7 @@ const NAV: NavItem[] = [
   { href: "/purchases", label: "Purchases", icon: ShoppingCart },
   { href: "/sales", label: "Sales", icon: Receipt },
   { href: "/customers", label: "Customers", icon: Users },
+  { href: "/reports", label: "Reports", icon: BarChart3 },
 ];
 
 export function SidebarNav() {
