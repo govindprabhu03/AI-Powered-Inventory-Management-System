@@ -6,6 +6,7 @@ import {
   Boxes,
   LayoutDashboard,
   Package,
+  Receipt,
   ShoppingCart,
   Tags,
   Users,
@@ -27,6 +28,7 @@ const NAV: NavItem[] = [
   { href: "/warehouses", label: "Warehouses", icon: Warehouse },
   { href: "/suppliers", label: "Suppliers", icon: Truck },
   { href: "/purchases", label: "Purchases", icon: ShoppingCart },
+  { href: "/sales", label: "Sales", icon: Receipt },
   { href: "/customers", label: "Customers", icon: Users },
 ];
 
