@@ -6,7 +6,9 @@ import {
   Boxes,
   LayoutDashboard,
   Package,
+  ShoppingCart,
   Tags,
+  Users,
   Warehouse,
   Truck,
   type LucideIcon,
@@ -24,6 +26,8 @@ const NAV: NavItem[] = [
   { href: "/categories", label: "Categories", icon: Tags },
   { href: "/warehouses", label: "Warehouses", icon: Warehouse },
   { href: "/suppliers", label: "Suppliers", icon: Truck },
+  { href: "/purchases", label: "Purchases", icon: ShoppingCart },
+  { href: "/customers", label: "Customers", icon: Users },
 ];
 
 export function SidebarNav() {

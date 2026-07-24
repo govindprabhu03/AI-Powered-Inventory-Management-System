@@ -48,7 +48,7 @@ export default async function StockHistoryPage({
   // what happened — rows are never edited or deleted.
   const { data: movements } = await supabase
     .from("stock_movements")
-    .select("id, movement_type, quantity, note, created_at, warehouses(name)")
+    .select("id, movement_type, quantity, note, reference, created_at, warehouses(name)")
     .eq("product_id", productId)
     .eq("org_id", ctx.activeOrg.orgId)
     .order("created_at", { ascending: false })
@@ -93,6 +93,7 @@ export default async function StockHistoryPage({
               <TableHead>Type</TableHead>
               <TableHead>Warehouse</TableHead>
               <TableHead className="text-right">Qty</TableHead>
+              <TableHead>Reference</TableHead>
               <TableHead>Note</TableHead>
             </TableRow>
           </TableHeader>
@@ -118,6 +119,9 @@ export default async function StockHistoryPage({
                   }`}
                 >
                   {m.quantity > 0 ? `+${m.quantity}` : m.quantity}
+                </TableCell>
+                <TableCell className="font-mono text-xs text-muted-foreground">
+                  {m.reference ?? ""}
                 </TableCell>
                 <TableCell className="max-w-48 truncate text-muted-foreground">
                   {m.note ?? ""}
