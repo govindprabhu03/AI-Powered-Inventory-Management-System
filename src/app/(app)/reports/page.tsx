@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Coins, PackageX, TrendingDown, Trophy } from "lucide-react";
+import { Coins, LineChart, PackageX, TrendingDown, Trophy } from "lucide-react";
 
 import { requireContext } from "@/lib/auth/context";
 
@@ -10,6 +10,7 @@ const REPORTS = [
   { href: "/reports/low-stock", title: "Low stock", desc: "Products at or below their reorder level.", icon: TrendingDown },
   { href: "/reports/dead-stock", title: "Dead stock", desc: "Stock on hand that hasn't sold in 90 days.", icon: PackageX },
   { href: "/reports/best-sellers", title: "Best sellers", desc: "Top products by units sold and revenue.", icon: Trophy },
+  { href: "/reports/forecast", title: "Demand forecast", desc: "Projected demand and reorder suggestions from the ledger.", icon: LineChart },
 ];
 
 export default async function ReportsPage() {

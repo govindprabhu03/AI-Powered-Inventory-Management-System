@@ -8,6 +8,7 @@ import {
   BarChart3,
   History,
   Package,
+  Sparkles,
   Receipt,
   ShoppingCart,
   Tags,
@@ -24,6 +25,7 @@ type NavItem = { href: string; label: string; icon: LucideIcon };
 // Extended as each section of Phase 2 is built.
 const NAV: NavItem[] = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/assistant", label: "Assistant", icon: Sparkles },
   { href: "/stock", label: "Stock", icon: Boxes },
   { href: "/products", label: "Products", icon: Package },
   { href: "/categories", label: "Categories", icon: Tags },
