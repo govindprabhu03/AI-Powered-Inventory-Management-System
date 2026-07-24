@@ -65,6 +65,11 @@ export function canApprovePurchase(role: OrgRole): boolean {
   return role === "super_admin";
 }
 
+/** Roles allowed to view the audit log (mirrors its RLS). */
+export function canViewAudit(role: OrgRole): boolean {
+  return role === "super_admin" || role === "inventory_manager";
+}
+
 /** Roles that can receive POs / fulfil SOs / record returns. */
 export function canFulfil(role: OrgRole): boolean {
   return (

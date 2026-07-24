@@ -6,6 +6,7 @@ import {
   Boxes,
   LayoutDashboard,
   BarChart3,
+  History,
   Package,
   Receipt,
   ShoppingCart,
@@ -32,6 +33,7 @@ const NAV: NavItem[] = [
   { href: "/sales", label: "Sales", icon: Receipt },
   { href: "/customers", label: "Customers", icon: Users },
   { href: "/reports", label: "Reports", icon: BarChart3 },
+  { href: "/audit", label: "Audit log", icon: History },
 ];
 
 export function SidebarNav() {
