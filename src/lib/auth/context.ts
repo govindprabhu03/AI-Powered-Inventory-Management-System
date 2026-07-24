@@ -44,6 +44,36 @@ export function canRecordStock(role: OrgRole): boolean {
   return STOCK_RECORDERS.includes(role);
 }
 
+/** Roles allowed to manage customers and sales orders. */
+export const SALES_ROLES: OrgRole[] = [
+  "super_admin",
+  "inventory_manager",
+  "sales_executive",
+];
+
+export function canManageSales(role: OrgRole): boolean {
+  return SALES_ROLES.includes(role);
+}
+
+/** Roles allowed to create/manage purchase orders (not approve). */
+export function canManagePurchasing(role: OrgRole): boolean {
+  return role === "super_admin" || role === "inventory_manager";
+}
+
+/** Only super admins approve purchase orders (mirrors approve_purchase_order). */
+export function canApprovePurchase(role: OrgRole): boolean {
+  return role === "super_admin";
+}
+
+/** Roles that can receive POs / fulfil SOs / record returns. */
+export function canFulfil(role: OrgRole): boolean {
+  return (
+    role === "super_admin" ||
+    role === "inventory_manager" ||
+    role === "warehouse_staff"
+  );
+}
+
 /**
  * The single source of truth for "who is signed in, and which organization are
  * they acting in". Every page under the app shell calls this.
