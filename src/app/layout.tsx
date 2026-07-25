@@ -15,10 +15,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: {
-    default: "Smart Inventory",
-    template: "%s · Smart Inventory",
-  },
+  // Pages set their own full title (e.g. "Stock · Smart Inventory"), so no
+  // template here — a template would double the suffix.
+  title: "Smart Inventory",
   description:
     "AI-powered inventory management for small and medium businesses — real-time stock, purchasing, sales, forecasting and analytics.",
 };

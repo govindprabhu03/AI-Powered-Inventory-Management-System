@@ -7,7 +7,9 @@ import "server-only";
  * it produces a final text answer (capped to avoid runaway loops).
  */
 
-const MODEL = process.env.GEMINI_MODEL || "gemini-2.0-flash";
+// `gemini-flash-latest` tracks the current free-tier flash model, so it keeps
+// working as Google retires older versions (2.0/2.5 flash are already gone/capped).
+const MODEL = process.env.GEMINI_MODEL || "gemini-flash-latest";
 const endpoint = (m: string) =>
   `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent`;
 
