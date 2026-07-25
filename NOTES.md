@@ -823,10 +823,10 @@ git remote set-url origin https://USERNAME@github.com/USERNAME/repo.git
 | **1** ✅ | Auth + organizations | **RLS**, policies, `security definer`, OAuth, JWT, triggers |
 | **2** ✅ | Products, categories, warehouses, suppliers | CRUD pattern, Zod, React Hook Form, recursive CTEs, file storage |
 | **3** ✅ | Inventory ledger | Append-only design, triggers, transactions, realtime, concurrency |
-| **4** | Purchases + sales | State machines, order lifecycles, PDF generation |
-| **5** | Dashboard, reports, search, notifications | Views, indexes, full-text search, charts, realtime |
-| **6** | AI assistant + forecasting | Tool calling, moving averages, seasonality, RAG |
-| **7** | Hardening | Monitoring, performance, accessibility, security review |
+| **4** ✅ | Purchases + sales | State machines, order lifecycles, reservations |
+| **5** ✅ | Dashboard, reports, search, notifications | Views (security_invoker), indexes, trigram search, charts, realtime |
+| **6** ✅ | AI assistant + forecasting | Tool calling, moving averages, trend, reorder math |
+| **7** ✅ | Hardening | Monitoring (Vercel), security headers, accessibility, security review, README |
 
 ### Design decisions worth being able to defend
 

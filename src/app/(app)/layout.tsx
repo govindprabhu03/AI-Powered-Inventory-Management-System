@@ -25,6 +25,13 @@ export default async function AppLayout({
 
   return (
     <div className="flex min-h-svh">
+      {/* Keyboard users can jump straight to the page content. */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:rounded-md focus:bg-primary focus:px-3 focus:py-2 focus:text-sm focus:text-primary-foreground"
+      >
+        Skip to content
+      </a>
       <aside className="flex w-64 shrink-0 flex-col gap-4 border-r p-4">
         <OrgSwitcher
           activeOrgId={ctx.activeOrg.orgId}
@@ -55,7 +62,9 @@ export default async function AppLayout({
           <GlobalSearch orgId={ctx.activeOrg.orgId} />
           <NotificationBell userId={ctx.userId} items={items} unread={unread} />
         </header>
-        <main className="min-w-0 flex-1">{children}</main>
+        <main id="main-content" className="min-w-0 flex-1">
+          {children}
+        </main>
       </div>
     </div>
   );
