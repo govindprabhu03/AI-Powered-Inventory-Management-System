@@ -32,7 +32,7 @@ export default async function AppLayout({
       >
         Skip to content
       </a>
-      <aside className="flex w-64 shrink-0 flex-col gap-4 border-r p-4">
+      <aside className="flex w-64 shrink-0 flex-col gap-4 border-r bg-sidebar/70 p-4 backdrop-blur-sm">
         <OrgSwitcher
           activeOrgId={ctx.activeOrg.orgId}
           memberships={ctx.memberships}
@@ -58,7 +58,7 @@ export default async function AppLayout({
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex h-12 items-center justify-between gap-2 border-b px-6">
+        <header className="sticky top-0 z-30 flex h-12 items-center justify-between gap-2 border-b bg-background/70 px-6 backdrop-blur-sm">
           <GlobalSearch orgId={ctx.activeOrg.orgId} />
           <NotificationBell userId={ctx.userId} items={items} unread={unread} />
         </header>
