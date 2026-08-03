@@ -49,9 +49,9 @@
 }
 
 :root {
-  /* Cool indigo-tinted light theme. Cards stay white so content pops against
-     the softly tinted page background. */
-  --background: oklch(0.984 0.004 265);
+  /* Cool indigo-tinted light theme. The page surface is a clearly-tinted soft
+     lavender-grey (not white); cards stay white so content pops on top. */
+  --background: oklch(0.955 0.014 264);
   --foreground: oklch(0.21 0.02 270);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.21 0.02 270);
